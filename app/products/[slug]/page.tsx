@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, use, useEffect } from "react"
 import { notFound } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -10,26 +10,52 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Star, Heart, ShoppingCart, Minus, Plus, Truck, Shield, RotateCcw } from "lucide-react"
-import { useCart } from "@/lib/cart-context"
-import { getProductBySlug, getRelatedProducts } from "@/lib/products"
+import { useSupabaseCart } from "@/lib/supabase-cart-context"
+import { getProductBySlug, getRelatedProducts, type Product } from "@/lib/products"
 
 interface ProductPageProps {
-  params: {
+  params: Promise<{
     slug: string
-  }
+  }>
 }
 
 export default function ProductPage({ params }: ProductPageProps) {
-  const product = getProductBySlug(params.slug)
+  const { slug } = use(params)
+  const [product, setProduct] = useState<Product | undefined>(undefined)
+  const [relatedProducts, setRelatedProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
   const [selectedImage, setSelectedImage] = useState(0)
   const [quantity, setQuantity] = useState(1)
-  const { addItem } = useCart()
+  const { addItem } = useSupabaseCart()
+
+  useEffect(() => {
+    const loadData = async () => {
+      const [prod, related] = await Promise.all([
+        getProductBySlug(slug),
+        getRelatedProducts('', '') // We'll fix this later
+      ])
+      setProduct(prod)
+      setRelatedProducts(related)
+      setLoading(false)
+    }
+    loadData()
+  }, [slug])
+  
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <main className="container mx-auto px-4 py-8">
+          <div className="text-center">Loading...</div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   if (!product) {
     notFound()
   }
-
-  const relatedProducts = getRelatedProducts(product.id, product.category)
 
   const handleQuantityChange = (change: number) => {
     const newQuantity = quantity + change
