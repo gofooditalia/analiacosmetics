@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, use, useEffect } from "react"
 import { notFound } from "next/navigation"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
@@ -10,33 +10,62 @@ import { Button } from "@/components/ui/button"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import { Search, Grid, List, SlidersHorizontal } from "lucide-react"
-import { getProductsByCategory, productCategories } from "@/lib/products"
+import { getProductsByCategory, getProductCategories, type Product, type ProductCategory } from "@/lib/products"
 
 interface CategoryPageProps {
-  params: {
+  params: Promise<{
     category: string
-  }
+  }>
 }
 
 type SortOption = "featured" | "price-low" | "price-high" | "newest" | "rating"
 type ViewMode = "grid" | "list"
 
 export default function CategoryPage({ params }: CategoryPageProps) {
-  const category = productCategories.find((cat) => cat.slug === params.category)
-  const categoryProducts = getProductsByCategory(params.category)
+  const { category: categorySlug } = use(params)
+  const [categories, setCategories] = useState<ProductCategory[]>([])
+  const [categoryProducts, setCategoryProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState(true)
+
+  useEffect(() => {
+    const loadData = async () => {
+      const [cats, products] = await Promise.all([
+        getProductCategories(),
+        getProductsByCategory(categorySlug)
+      ])
+      setCategories(cats)
+      setCategoryProducts(products)
+      setLoading(false)
+    }
+    loadData()
+  }, [categorySlug])
+
+  const category = categories.find((cat) => cat.slug === categorySlug)
 
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState<SortOption>("featured")
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
   const [filtersOpen, setFiltersOpen] = useState(false)
   const [filters, setFilters] = useState<FilterState>({
-    categories: [params.category],
+    categories: [categorySlug],
     priceRange: [0, 100],
     skinTypes: [],
     tags: [],
     inStock: false,
     onSale: false,
   })
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <main className="container mx-auto px-4 py-8">
+          <div className="text-center">Loading...</div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   if (!category || categoryProducts.length === 0) {
     notFound()

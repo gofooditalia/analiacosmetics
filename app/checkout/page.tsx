@@ -11,10 +11,10 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Separator } from "@/components/ui/separator"
 import { ArrowLeft, CreditCard, Truck, Shield } from "lucide-react"
-import { useCart } from "@/lib/cart-context"
+import { useSupabaseCart } from "@/lib/supabase-cart-context"
 
 export default function CheckoutPage() {
-  const { items, total, itemCount, clearCart } = useCart()
+  const { items, total, itemCount, clearCart } = useSupabaseCart()
   const [isProcessing, setIsProcessing] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {

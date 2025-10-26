@@ -6,12 +6,12 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Search, Menu, X, ChevronDown, Globe, User } from "lucide-react"
 import { CartDrawer } from "@/components/cart-drawer"
-import { useAuth } from "@/lib/auth-context"
+import { useSupabaseAuth } from "@/lib/supabase-auth-context"
 import { useLanguage } from "@/lib/language-context"
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, signOut } = useSupabaseAuth()
   const { language, setLanguage, t } = useLanguage()
 
   const toggleLanguage = () => {
@@ -95,7 +95,7 @@ export function Header() {
                   <div className="py-2">
                     <div className="px-4 py-2 border-b">
                       <p className="text-sm font-medium">
-                        {user?.firstName} {user?.lastName}
+                        {user?.user_metadata?.firstName || user?.email?.split('@')[0]} {user?.user_metadata?.lastName || ''}
                       </p>
                       <p className="text-xs text-muted-foreground">{user?.email}</p>
                     </div>
@@ -160,6 +160,12 @@ export function Header() {
                   <Link href="/account" className="block py-2 text-foreground hover:text-primary">
                     {t("header.myAccount")}
                   </Link>
+                  <button
+                    onClick={() => signOut()}
+                    className="block w-full px-4 py-2 text-left text-foreground hover:text-primary"
+                  >
+                    {t("header.signOut")}
+                  </button>
                 </>
               ) : (
                 <>

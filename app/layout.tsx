@@ -1,7 +1,7 @@
 import type React from "react"
 import type { Metadata } from "next"
-import { CartProvider } from "@/lib/cart-context"
-import { AuthProvider } from "@/lib/auth-context"
+import { SupabaseCartProvider } from "@/lib/supabase-cart-context"
+import { SupabaseAuthProvider } from "@/lib/supabase-auth-context"
 import { LanguageProvider } from "@/lib/language-context"
 import "./globals.css"
 
@@ -22,9 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className="font-sans antialiased">
         <LanguageProvider>
-          <AuthProvider>
-            <CartProvider>{children}</CartProvider>
-          </AuthProvider>
+          <SupabaseAuthProvider>
+            <SupabaseCartProvider>{children}</SupabaseCartProvider>
+          </SupabaseAuthProvider>
         </LanguageProvider>
       </body>
     </html>

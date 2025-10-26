@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useEffect } from "react"
 import { Header } from "@/components/header"
 import { Footer } from "@/components/footer"
 import { ProductCard } from "@/components/product-card"
@@ -10,12 +10,15 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Search, Grid, List, SlidersHorizontal } from "lucide-react"
-import { products, productCategories } from "@/lib/products"
+import { getProducts, getProductCategories, type Product, type ProductCategory } from "@/lib/products"
 
 type SortOption = "featured" | "price-low" | "price-high" | "newest" | "rating"
 type ViewMode = "grid" | "list"
 
 export default function ShopPage() {
+  const [products, setProducts] = useState<Product[]>([])
+  const [productCategories, setProductCategories] = useState<ProductCategory[]>([])
+  const [loading, setLoading] = useState(true)
   const [searchQuery, setSearchQuery] = useState("")
   const [sortBy, setSortBy] = useState<SortOption>("featured")
   const [viewMode, setViewMode] = useState<ViewMode>("grid")
@@ -94,7 +97,32 @@ export default function ShopPage() {
     }
 
     return filtered
-  }, [searchQuery, sortBy, filters])
+  }, [products, searchQuery, sortBy, filters])
+
+  useEffect(() => {
+    const loadData = async () => {
+      const [prods, cats] = await Promise.all([
+        getProducts(),
+        getProductCategories()
+      ])
+      setProducts(prods)
+      setProductCategories(cats)
+      setLoading(false)
+    }
+    loadData()
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen">
+        <Header />
+        <main className="container mx-auto px-4 py-8">
+          <div className="text-center">Loading...</div>
+        </main>
+        <Footer />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen">

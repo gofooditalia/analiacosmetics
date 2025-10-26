@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Separator } from "@/components/ui/separator"
 import { Eye, EyeOff, Mail, Lock, User } from "lucide-react"
-import { useAuth } from "@/lib/auth-context"
+import { useSupabaseAuth } from "@/lib/supabase-auth-context"
 
 export default function RegisterPage() {
   const [formData, setFormData] = useState({
@@ -29,7 +29,7 @@ export default function RegisterPage() {
   const [agreeToTerms, setAgreeToTerms] = useState(false)
   const [subscribeNewsletter, setSubscribeNewsletter] = useState(false)
   const [error, setError] = useState("")
-  const { register, isLoading } = useAuth()
+  const { signUp, isLoading } = useSupabaseAuth()
   const router = useRouter()
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,7 +63,7 @@ export default function RegisterPage() {
       return
     }
 
-    const success = await register({
+    const success = await signUp({
       firstName: formData.firstName,
       lastName: formData.lastName,
       email: formData.email,

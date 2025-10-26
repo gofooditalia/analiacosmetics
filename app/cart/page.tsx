@@ -6,10 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { ShoppingCart, Plus, Minus, X, ArrowLeft } from "lucide-react"
-import { useCart } from "@/lib/cart-context"
+import { useSupabaseCart } from "@/lib/supabase-cart-context"
 
 export default function CartPage() {
-  const { items, total, itemCount, updateQuantity, removeItem, clearCart } = useCart()
+  const { items, total, itemCount, updateQuantity, removeItem, clearCart } = useSupabaseCart()
 
   if (items.length === 0) {
     return (

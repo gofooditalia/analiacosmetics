@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Star, Heart, ShoppingCart } from "lucide-react"
-import { useCart } from "@/lib/cart-context"
+import { useSupabaseCart } from "@/lib/supabase-cart-context"
 import type { Product } from "@/lib/products"
 
 interface ProductCardProps {
@@ -15,7 +15,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product }: ProductCardProps) {
-  const { addItem } = useCart()
+  const { addItem } = useSupabaseCart()
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault()

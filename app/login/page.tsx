@@ -13,14 +13,14 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Eye, EyeOff, Mail, Lock } from "lucide-react"
-import { useAuth } from "@/lib/auth-context"
+import { useSupabaseAuth } from "@/lib/supabase-auth-context"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState("")
-  const { login, isLoading } = useAuth()
+  const { signIn, isLoading } = useSupabaseAuth()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,11 +32,11 @@ export default function LoginPage() {
       return
     }
 
-    const success = await login(email, password)
-    if (success) {
-      router.push("/account")
-    } else {
+    const { error } = await signIn(email, password)
+    if (error) {
       setError("Invalid email or password")
+    } else {
+      router.push("/account")
     }
   }
 

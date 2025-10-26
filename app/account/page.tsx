@@ -9,10 +9,10 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { User, Package, MapPin, Settings, LogOut, Eye } from "lucide-react"
-import { useAuth } from "@/lib/auth-context"
+import { useSupabaseAuth } from "@/lib/supabase-auth-context"
 
 export default function AccountPage() {
-  const { user, isAuthenticated, isLoading, logout } = useAuth()
+  const { user, isAuthenticated, isLoading, signOut } = useSupabaseAuth()
   const router = useRouter()
 
   useEffect(() => {

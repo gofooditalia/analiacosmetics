@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap");
 @import "tailwindcss";
 @import "tw-animate-css";
 
@@ -135,6 +136,3 @@
     @apply font-serif font-bold;
   }
 }
-
-/* Added Google Fonts import for DM Sans and Space Grotesk */
-@import url("https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Space+Grotesk:wght@300..700&display=swap");

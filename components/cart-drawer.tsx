@@ -7,11 +7,11 @@ import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet"
 import { ShoppingCart, Plus, Minus, X } from "lucide-react"
-import { useCart } from "@/lib/cart-context"
+import { useSupabaseCart } from "@/lib/supabase-cart-context"
 
 export function CartDrawer() {
   const [isOpen, setIsOpen] = useState(false)
-  const { items, total, itemCount, updateQuantity, removeItem } = useCart()
+  const { items, total, itemCount, updateQuantity, removeItem } = useSupabaseCart()
 
   return (
     <Sheet open={isOpen} onOpenChange={setIsOpen}>
