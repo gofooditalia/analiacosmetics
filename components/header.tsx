@@ -38,9 +38,12 @@ export function Header() {
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
+            <Link href="/shop" className="flex items-center space-x-2 text-foreground hover:text-primary transition-colors font-semibold">
+              <span>{t("header.shop")}</span>
+            </Link>
             <div className="relative group">
               <button className="flex items-center space-x-1 text-foreground hover:text-primary transition-colors">
-                <span>{t("header.shop")}</span>
+                <span>{t("header.categories")}</span>
                 <ChevronDown className="h-4 w-4" />
               </button>
               <div className="absolute top-full left-0 mt-2 w-48 bg-card border border-border rounded-md shadow-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
